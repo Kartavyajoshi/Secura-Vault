@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="secura.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secura - Enterprise Password Security</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #1e40af;
+            --border-color: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-primary: #60a5fa;
+            --accent-secondary: #3b82f6;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Futuristic Animated Background */
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(var(--accent-primary) 1px, transparent 1px),
+                linear-gradient(90deg, var(--accent-primary) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(-200px) translateX(-30px); }
+            75% { transform: translateY(-100px) translateX(-80px); }
+        }
+
+        /* Glowing orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-primary);
+            top: -250px;
+            right: -250px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-secondary);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: -10s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, -100px) scale(1.1); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 8px;
+            display: flex;
+            gap: 5px;
+            box-shadow: 0 4px 20px var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .theme-btn:hover:not(.active) {
+            background: var(--bg-secondary);
+        }
+
+        /* Navigation */
+        nav {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: var(--bg-card);
+            border-radius: 15px;
+            margin: 20px 0;
+            padding: 20px 40px;
+            box-shadow: 0 8px 32px var(--shadow);
+            border: 1px solid var(--border-color);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6); }
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 100px 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h2 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--text-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideUp 0.8s ease-out;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 50px;
+            animation: slideUp 0.8s ease-out 0.2s both;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: slideUp 0.8s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .features h3 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            color: var(--accent-primary);
+            font-weight: 800;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 60px var(--shadow);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .feature-card h4 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .tech-stack h3 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: var(--text-primary);
+            font-weight: 800;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .badge {
+            background: var(--bg-card);
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        /* Installation */
+        .installation {
+            padding: 80px 0;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .installation h3 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            color: var(--accent-primary);
+            font-weight: 800;
+        }
+
+        .install-steps {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-primary);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .step h4 {
+            color: var(--accent-primary);
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .code-block {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-block code {
+            color: var(--accent-primary);
+            font-size: 14px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 0 40px 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 80px;
+            background: var(--bg-secondary);
+        }
+
+        .developer-badge {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: 50px;
+            padding: 25px 50px;
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .developer-badge:hover {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .developer-name {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .made-with-love {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 36px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Futuristic Background -->
+    <div class="cyber-grid"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button class="theme-btn active" id="lightBtn" onclick="setTheme('light')">☀️</button>
+        <button class="theme-btn" id="darkBtn" onclick="setTheme('dark')">🌙</button>
+    </div>
+    
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <div class="logo">
+                <div class="logo-icon">
+    <img src="secura_logo.png" alt="SecuraVault Icon" width="50" height="50">
+</div>
+                <h1>Secura</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="https://github.com/Kartavyajoshi/Secura-Vault/discussions">Community</a></li>
+                <li><a href="https://github.com/Kartavyajoshi/Secura-Vault" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2>Enterprise-Grade Password Security</h2>
+            <p>Secura delivers military-grade encryption with hardware-bound security, multi-factor authentication, and zero-knowledge architecture. Trusted by security professionals for protecting sensitive credentials.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/Kartavyajoshi/Secura-Vault/releases/download/SecuraVault_v1.0/SecuraVault.exe" class="btn btn-primary">
+                    ⬇️ Download for Windows
+                </a>
+                <a href="https://github.com/Kartavyajoshi/Secura-Vault" class="btn btn-secondary">
+                    📖 View Source Code
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h3>🚀 Enterprise Features</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h4>AES-256-GCM Encryption</h4>
+                    <p>Military-grade encryption using Galois/Counter Mode with authenticated encryption, ensuring data integrity and preventing tampering.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔗</span>
+                    <h4>Hardware Binding</h4>
+                    <p>Cryptographic keys are bound to your device's unique hardware signature using Argon2id, preventing unauthorized access.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🛡️</span>
+                    <h4>Multi-Factor Authentication</h4>
+                    <p>Time-based one-time passwords (TOTP) compatible with Google Authenticator for additional security.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🧹</span>
+                    <h4>Memory Protection</h4>
+                    <p>Automatic secure memory wiping and database vacuuming prevent forensic data recovery.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🎲</span>
+                    <h4>Cryptographic Generator</h4>
+                    <p>Generate cryptographically secure passwords with customizable entropy for maximum strength.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h4>Security Analytics</h4>
+                    <p>Real-time vault health monitoring with intelligent weak password detection.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="tech-stack">
+            <h3>🛠️ Technology Stack</h3>
+            <div class="tech-badges">
+                <span class="badge">Python 3.8+</span>
+                <span class="badge">CustomTkinter UI</span>
+                <span class="badge">AES-256-GCM</span>
+                <span class="badge">Argon2id KDF</span>
+                <span class="badge">SQLite Database</span>
+                <span class="badge">TOTP Authentication</span>
+            </div>
+        </section>
+
+        <!-- Installation Section -->
+        <section class="installation" id="installation">
+            <h3>⚡ Quick Installation</h3>
+            <div class="install-steps">
+                <div class="step">
+                    <h4>Option 1: Download Executable</h4>
+                    <p>Download the pre-built Windows executable - no setup required!</p>
+                    <div class="code-block">
+                        <code>1. Click "Download for Windows" button above
+2. Run SecuraVault.exe
+3. Start securing your passwords!</code>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Option 2: Run from Source</h4>
+                    <div class="code-block">
+                        <code>git clone https://github.com/Kartavyajoshi/Secura-Vault.git
+cd Secura-Vault
+pip install -r requirements.txt
+python secura.py</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="developer-badge">
+                <span class="developer-name">KARTAVYA JOSHI</span>
+                <span class="made-with-love">Security Software Engineer</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="https://github.com/Kartavyajoshi/Secura-Vault">Source Code</a>
+                <a href="https://github.com/Kartavyajoshi/Secura-Vault/issues">Report Issue</a>
+                <a href="https://github.com/Kartavyajoshi/Secura-Vault/discussions">Community</a>
+            </div>
+
+            <p style="margin-top: 20px;">
+                <a href="https://github.com/Kartavyajoshi" 
+                   style="color: var(--accent-primary); text-decoration: none; font-weight: 600;">
+                    🔗 GitHub Profile
+                </a>
+            </p>
+
+            <p style="margin-top: 30px; font-size: 14px; color: var(--text-secondary);">
+                © 2026 Kartavya Joshi. All Rights Reserved.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme Management
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // Update button states
+            document.getElementById('lightBtn').classList.toggle('active', theme === 'light');
+            document.getElementById('darkBtn').classList.toggle('active', theme === 'dark');
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .step').forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
