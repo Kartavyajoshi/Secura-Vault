@@ -30,6 +30,11 @@
 * **Backups:** Periodically copy your `vault.db` to a secure backup drive.
 * **Folder Security:** Keep the application folder in a place only you can access on your PC.
 
+## 💬 Feedback & Support
+* **Found a bug?** Open an [Issue](https://github.com/Kartavyajoshi/Secura-Vault/issues).
+* **Have a question?** Start a [Discussion](https://github.com/Kartavyajoshi/Secura-Vault/discussions).
+* **Want to contribute?** Feel free to fork the repo and submit a Pull Request!
+
 ---
 
 ### 👨‍💻 Developed by
